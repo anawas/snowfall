@@ -13,19 +13,21 @@ class Snowflake:
         self.frequency = random.randint(150, 300)
         self.x = random.randint(0, self.scr_width)
         self.y = random.randint(0, self.scr_height)
-        self.z = random.randint(1, 10)
+        self.z = random.randint(1, 5)
         self.color = self._set_color()
 
     def _set_color(self):
-        gray_value = 255
-        return (gray_value, gray_value, gray_value)
+        gray_value = self.z * 40
+        color_image = self.sprite.copy()
+        color_image.convert_alpha()
+        color_image.fill((gray_value, gray_value, gray_value))
+        color_image.blit(self.sprite, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
+        return color_image
 
     def update(self):
         if self.off_screen():
             return
-
-        # self.sprite = pygame.transform.rotate(self.sprite, 0.1)
-        self.screen.blit(self.sprite, self.translate())
+        self.screen.blit(self._set_color(), self.translate())
 
     def translate(self):
         self.y += self.z
