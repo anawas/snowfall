@@ -1,7 +1,10 @@
 import pygame
 import random
+from Snowflake import Snowflake
 
 SPRITE_SIZE = 32
+MAX_FLAKES = 200
+starfield = []
 
 
 def get_image(sheet, x, y, width=32, height=32):
@@ -24,7 +27,6 @@ def event_handler(event_queue):
 def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 800))
-    screen.fill((0, 0, 0))
 
     try:
         sheet = pygame.image.load('Flakes1.png').convert()
@@ -38,11 +40,10 @@ def main():
         for y in range(0, 15):
             flake_sprites.append(get_image(sheet, x*32, y*32))
 
-    for _ in range(200):
+
+    for _ in range(MAX_FLAKES):
         index = random.randrange(0, 10)
-        xpos = random.randrange(32, 800-32)
-        ypos = random.randrange(32, 800-32)
-        screen.blit(flake_sprites[index], (xpos,  ypos, 32, 32))
+        starfield.append(Snowflake(screen, flake_sprites[index]))
 
     clock = pygame.time.Clock()
     print('Entering game loop')
@@ -50,6 +51,16 @@ def main():
     while(running):
         clock.tick(30)
         running = event_handler(pygame.event.get())
+        screen.fill((0, 0, 0))
+        for i in range(0, MAX_FLAKES):
+            if starfield[i].off_screen():
+                del starfield[i]
+                newFlake = Snowflake(screen, flake_sprites[random.randint(0, 100)])
+                newFlake.y = -40
+                starfield.append(newFlake)
+
+        for flake in starfield:
+            flake.update()
 
         pygame.display.flip()
 
