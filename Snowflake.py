@@ -14,10 +14,11 @@ class Snowflake:
         self.x = random.randint(0, self.scr_width)
         self.y = random.randint(0, self.scr_height)
         self.z = random.randint(1, 5)
+        self.gray_values = [0, 100, 115, 150, 200, 250]
         self.color = self._set_color()
 
     def _set_color(self):
-        gray_value = self.z * 40
+        gray_value = self.gray_values[self.z]
         color_image = self.sprite.copy()
         color_image.convert_alpha()
         color_image.fill((gray_value, gray_value, gray_value))
